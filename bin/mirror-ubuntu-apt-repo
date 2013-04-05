@@ -8,23 +8,30 @@ mkdir -p {dists,pool}
 
 url_ubuntu="rsync://archive.ubuntu.com/ubuntu"
  
-updates=$(
-  rsync -iaO --delete --exclude mirror --exclude trace --exclude ubuntu --exclude pool --exclude dists $url_ubuntu/. .
-  
-  for nm_distro in "$@"; do
-    for pth_dist in dists/$nm_distro{,-{backports,security,updates}}; do
-      rsync -iaO --delete --exclude 'installer-*' $url_ubuntu/$pth_dist/. $pth_dist/
-    done
+tmp_updates="$(mktemp -t XXXXXXXXX)"
+trap "rm -f $tmp_updates" EXIT
+
+{
+# main mirror except for debugging trace, symlink ubuntu, and very large pool, dists
+rsync -iaO --delete --exclude mirror --exclude trace --exclude ubuntu --exclude pool --exclude dists $url_ubuntu/. .
+
+# mirror interesting distributions
+for nm_distro in "$@"; do
+  for pth_dist in dists/$nm_distro{,-{backports,security,updates}}; do
+    # skip installer, not relevant for aptitude or debootstrap
+    rsync -iaO --delete --exclude 'installer-*' $url_ubuntu/$pth_dist/. $pth_dist/
   done
-  
-  set -f; rsync -iaO \
-    --include '*/' \
-    $(dpkg -l 2>&- | grep ^i | awk '{print $2}' | while read -r p; do echo --include "${p}_*"; done) \
-    --exclude '*' $url_ubuntu/pool/. pool/; set +f
-)
+done
+
+# mirror select packages
+set -f; rsync -iaO \
+  --include '*/' \
+  $(dpkg -l 2>&- | grep ^i | awk '{print $2}' | while read -r p; do echo --include "${p}_*"; done) \
+  --exclude '*' $url_ubuntu/pool/. pool/; set +f
+} | tee "$tmp_updates"
  
-if [[ -n "$updates" ]]; then
-  echo "$updates"
+# error on rsync output, might mean an inconsistent sync
+if [[ -n "$(cat $tmp_updates)" ]]; then
   exit 1
 else
   exit 0
