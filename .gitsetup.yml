@@ -1,0 +1,4 @@
+---
+remotes:
+  primary: git@github.com:destructuring/offline-install
+  secondary: git@bitbucket.org:destructuring/offline-install
