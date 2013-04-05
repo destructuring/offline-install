@@ -24,6 +24,7 @@ updates=$(
 )
  
 if [[ -n "$updates" ]]; then
+  echo "$updates"
   exit 1
 else
   exit 0
