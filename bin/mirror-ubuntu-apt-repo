@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -efu
+ 
+mkdir -p ubuntu/{dists,pool}
+ 
+meh=$(
+  rsync -iaO --delete --exclude mirror --exclude trace --exclude ubuntu --exclude pool --exclude dists rsync://archive.ubuntu.com/ubuntu/. .
+  
+  for a in dists/{lucid,precise}{,-{backports,security,updates}}; do
+    rsync -iaO --exclude 'installer-*' rsync://archive.ubuntu.com/ubuntu/$a/. $a/
+  done
+  
+  set -f; rsync -iaO --include '*/' $(dpkg -l 2>&- | grep ^i | awk '{print $2}' | while read -r a; do echo --include "${a}_*"; done) --exclude '*' rsync://archive.ubuntu.com/ubuntu/pool/. pool/; set +f
+)
+ 
+if [[ -n "$meh" ]]; then
+  exit 1
+else
+  exit 0
+fi
