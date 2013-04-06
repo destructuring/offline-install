@@ -24,10 +24,10 @@ for nm_distro in "$@"; do
 done
 
 # mirror select packages
-set -f; rsync -iaO \
+rsync -iaO \
   --include '*/' \
-  $(dpkg -l 2>&- | grep ^i | awk '{print $2}' | while read -r p; do echo --include "${p}_*"; done) \
-  --exclude '*' $url_ubuntu/pool/. pool/; set +f
+  $({ dpkg -l 2>&- | grep ^i | awk '{print $2}'; find pool -type f  -name '*.deb' | cut -d/ -f4; } | sort -u | while read -r p; do echo --include "${p}_*"; done) \
+  --exclude '*' $url_ubuntu/pool/. pool/
 } | tee "$tmp_updates"
  
 # error on rsync output, might mean an inconsistent sync
