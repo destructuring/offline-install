@@ -1,38 +1,36 @@
 #!/bin/bash
 
 set -efu
- 
-cd ubuntu
 
-mkdir -p {dists,pool}
-
+shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 url_ubuntu="rsync://archive.ubuntu.com/ubuntu"
+ 
+cd $shome/ubuntu
+mkdir -p $shome/ubuntu/{dists,pool}
  
 tmp_updates="$(mktemp -t XXXXXXXXX)"
 trap "rm -f $tmp_updates" EXIT
 
 {
 # main mirror except for debugging trace, symlink ubuntu, and very large pool, dists
-rsync -iaO --delete --exclude mirror --exclude trace --exclude ubuntu --exclude pool --exclude dists $url_ubuntu/. .
+rsync -iaO --delete --exclude mirror --exclude trace --exclude ubuntu --exclude pool --exclude dists $url_ubuntu/. $some/ubuntu/
 
 # mirror interesting distributions
 for nm_distro in "$@"; do
-  for pth_dist in dists/$nm_distro{,-{backports,security,updates}}; do
+  for pth_dist in $shome/ubuntu/dists/$nm_distro{,-{backports,security,updates}}; do
     # skip installer, not relevant for aptitude or debootstrap
     rsync -iaO --delete --exclude 'installer-*' $url_ubuntu/$pth_dist/. $pth_dist/
   done
 done
 
-# mirror select packages
+# mirror select and existing packages
 rsync -iaO \
   --include '*/' \
   $({ dpkg -l 2>&- | grep ^i | awk '{print $2}'; find pool -type f  -name '*.deb' | cut -d/ -f4; } | sort -u | while read -r p; do echo --include "${p}_*"; done) \
-  --exclude '*' $url_ubuntu/pool/. pool/
+  --exclude '*' $url_ubuntu/pool/. $shome/ubuntu/pool/
 } | tee "$tmp_updates"
  
 # error on rsync output, might mean an inconsistent sync
 if [[ -n "$(cat $tmp_updates)" ]]; then
   exit 1
-else
-  exit 0
 fi
