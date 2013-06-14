@@ -13,6 +13,7 @@ shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 source "$shome/libexec/_jason"
 
 DEFINE_boolean clean "$FLAGS_FALSE" "delete the cache"
+DEFINE_boolean warm "$FLAGS_TRUE" "warm the cache"
 
 # entry point
 function main {
@@ -29,25 +30,29 @@ function main {
     $cmd_squid -k kill
   fi
 
-  (set +f; rm -f $shome/var/squid/logs/*.log)
-  
   if [[ "$FLAGS_clean" = "$FLAGS_TRUE" || ! -d $shome/var/squid/cache ]]; then
     rm -rf $shome/var/squid/cache
     $cmd_squid -z
   fi
 
-  $cmd_squid; sleep 3
+  export http_proxy=htp://localhost:3128
 
+  if [[ "$FLAGS_warm" = "$FLAGS_TRUE" ]]; then
+    (set +f; rm -f $shome/var/squid/logs/*.log)
+  fi
+
+  $cmd_squid; sleep 3
   nc -z localhost 3128
 
-  export http_proxy=htp://localhost:3128
-  cat $save_pwd/config/squid-urls.txt | sort -u | runmany 1 1 'echo "$1"; curl -s -o /dev/null "$1"' || true
+  if [[ "$FLAGS_warm" = "$FLAGS_TRUE" ]]; then
+    cat $save_pwd/config/squid-urls.txt | sort -u | runmany 1 1 'echo "$1"; curl -s -o /dev/null "$1"' || true
 
-  logger_info "unexpected accesses:"
-  cat $shome/var/squid/logs/access.log | sort -k4 | egrep -v "TCP_MISS/200|TCP_DENIED/403|TCP_HIT/200" || logger_info "clear"
+    logger_info "unexpected accesses:"
+    cat $shome/var/squid/logs/access.log | sort -k4 | egrep -v "TCP_MISS/200|TCP_DENIED/403|TCP_HIT/200" || logger_info "clear"
 
-  logger_info "urls to fetch: $(cat $save_pwd/config/squid-urls.txt | wc -l)"
-  logger_info "urls fetched: $(cat $shome/var/squid/logs/access.log | wc -l)"
+    logger_info "urls to fetch: $(cat $save_pwd/config/squid-urls.txt | wc -l)"
+    logger_info "urls fetched: $(cat $shome/var/squid/logs/access.log | wc -l)"
+  fi
 
   local tmp_urls="$(mktemp -t XXXXXXXXX)"
   { cat $save_pwd/config/squid-urls.txt; awk '{print $7}' $shome/var/squid/logs/access.log; } | LANG=C sort -u > $tmp_urls
