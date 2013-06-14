@@ -14,9 +14,10 @@ source "$shome/libexec/_jason"
 
 # entry point
 function main {
+  local save_pwd="$PWD"
   mkdir -p $shome/var/git/cache
   cd $shome/var/git/cache
-  runmany 8 1 'git mirror $1' $(cat config/git-cache.txt) || true
+  runmany 8 1 'git mirror $1' $(cat $save_pwd/config/git-cache.txt) || true
   runmany 8 1 'cd $1 && git fetch --all' $(set +f; echo */*.git)
 }
 
