@@ -16,7 +16,7 @@ source "$shome/libexec/_jason"
 function main {
   mkdir -p $shome/var/git/cache
   cd $shome/var/git/cache
-  runmany 8 1 'git mirror $1' $(cat $shome/config/git-cache.txt) || true
+  runmany 8 1 'git mirror $1' $(cat config/git-cache.txt) || true
   runmany 8 1 'cd $1 && git fetch --all' $(set +f; echo */*.git)
 }
 

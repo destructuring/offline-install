@@ -39,17 +39,17 @@ function main {
   nc -z localhost 3128
 
   export http_proxy=htp://localhost:3128
-  cat $shome/config/squid-urls.txt | sort -u | runmany 1 1 'echo "$1"; curl -s -o /dev/null "$1"' || true
+  cat config/squid-urls.txt | sort -u | runmany 1 1 'echo "$1"; curl -s -o /dev/null "$1"' || true
 
   logger_info "unexpected accesses:"
   cat $shome/var/squid/logs/access.log | sort -k4 | egrep -v "TCP_MISS/200|TCP_DENIED/403|TCP_HIT/200" || logger_info "clear"
 
-  logger_info "urls to fetch: $(cat $shome/config/squid-urls.txt | wc -l)"
-  logger_info "urls fetched: $(cat $shome/var/squid/logs/access.log | wc -l)"
+  logger_info "urls to fetch: $(cat config/squid-urls.txt | wc -l)"
+  logger_info "urls fetched: $(cat var/squid/logs/access.log | wc -l)"
 
   local tmp_urls="$(mktemp -t XXXXXXXXX)"
-  { cat $shome/config/squid-urls.txt; awk '{print $7}' $shome/var/squid/logs/access.log; } | LANG=C sort -u > $tmp_urls
-  mv $tmp_urls $shome/config/squid-urls.txt
+  { cat squid-urls.txt; awk '{print $7}' $shome/var/squid/logs/access.log; } | LANG=C sort -u > $tmp_urls
+  mv $tmp_urls config/squid-urls.txt
 }
 
 require sub "$BASH_SOURCE" "$@"
