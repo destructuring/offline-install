@@ -23,10 +23,6 @@ while (my $line = <STDIN>) {
     $rewritten = $rewrite{$toks[0]};
   }
 
-  open (MYFILE, '>>/tmp/rewrite.log');
-  print MYFILE "$rewritten\n";
-  close (MYFILE); 
-
   print "$rewritten\n";
   last;
 }
