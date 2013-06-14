@@ -5,21 +5,22 @@ set -efu
 shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 url_ubuntu="rsync://archive.ubuntu.com/ubuntu"
  
-cd $shome/ubuntu
-mkdir -p $shome/ubuntu/{dists,pool}
+mkdir -p $shome/var/apt/ubuntu
+cd $shome/var/apt/ubuntu
+mkdir -p $shome/var/apt/ubuntu/{dists,pool}
  
 tmp_updates="$(mktemp -t XXXXXXXXX)"
 trap "rm -f $tmp_updates" EXIT
 
 {
 # main mirror except for debugging trace, symlink ubuntu, and very large pool, dists
-rsync -iaO --delete --exclude mirror --exclude trace --exclude ubuntu --exclude pool --exclude dists $url_ubuntu/. $shome/ubuntu/
+rsync -iaO --delete --exclude mirror --exclude trace --exclude ubuntu --exclude pool --exclude dists $url_ubuntu/. $shome/var/apt/ubuntu/
 
 # mirror interesting distributions
 for nm_distro in "$@"; do
   for pth_dist in ubuntu/dists/$nm_distro{,-{backports,security,updates}}; do
     # skip installer, not relevant for aptitude or debootstrap
-    rsync -iaO --delete --exclude 'installer-*' $url_ubuntu/$pth_dist/. $shome/$pth_dist/
+    rsync -iaO --delete --exclude 'installer-*' $url_ubuntu/$pth_dist/. $shome/var/apt/$pth_dist/
   done
 done
 
@@ -27,5 +28,5 @@ done
 rsync -iaO \
   --include '*/' \
   $({ dpkg -l 2>&- | grep ^i | awk '{print $2}'; find pool -type f  -name '*.deb' | cut -d/ -f4; } | sort -u | while read -r p; do echo --include "${p}_*"; done) \
-  --exclude '*' $url_ubuntu/pool/. $shome/ubuntu/pool/
+  --exclude '*' $url_ubuntu/pool/. $shome/var/apt/ubuntu/pool/
 } | tee "$tmp_updates"

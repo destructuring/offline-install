@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#/ NAME
+#/     build-cache-git -- build the git cache
+#/
+#/ SYNOPSIS
+#/     build cache git
+
+# figure out the project root under which bin, lib live
+shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+
+# load a jason bourne library
+source "$shome/libexec/_jason"
+
+# entry point
+function main {
+  mkdir -p $shome/var/git/cache
+  cd $shome/var/git/cache
+  runmany 8 1 'git mirror $1' $(cat $shome/config/git-cache.txt) || true
+  runmany 8 1 'cd $1 && git fetch --all' $(set +f; echo */*.git)
+}
+
+require sub "$BASH_SOURCE" "$@"

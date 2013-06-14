@@ -1,1 +1,13 @@
 /ubuntu
+
+/.bundle
+/vendor/bundle
+
+/var/chef
+/var/squid
+/var/git
+/var/apt
+
+/config/git-cache.txt
+/config/squid-urls.txt
+/etc/squid.conf
