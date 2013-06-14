@@ -47,7 +47,7 @@ function main {
   cat $shome/var/squid/logs/access.log | sort -k4 | egrep -v "TCP_MISS/200|TCP_DENIED/403|TCP_HIT/200" || logger_info "clear"
 
   logger_info "urls to fetch: $(cat $save_pwd/config/squid-urls.txt | wc -l)"
-  logger_info "urls fetched: $(cat var/squid/logs/access.log | wc -l)"
+  logger_info "urls fetched: $(cat $shome/var/squid/logs/access.log | wc -l)"
 
   local tmp_urls="$(mktemp -t XXXXXXXXX)"
   { cat squid-urls.txt; awk '{print $7}' $shome/var/squid/logs/access.log; } | LANG=C sort -u > $tmp_urls
