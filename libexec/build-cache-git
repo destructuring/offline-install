@@ -12,11 +12,12 @@ shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 # load a jason bourne library
 source "$shome/libexec/_jason"
 
+DEFINE_string cache "git-cache" "Git-repo cache home"
+
 # entry point
 function main {
   local save_pwd="$PWD"
-  mkdir -p $shome/var/git/cache
-  cd $shome/var/git/cache
+  cd "$FLAGS_cache"
   runmany 8 1 'git mirror $1' $(cat $save_pwd/config/git-cache.txt) || true
   runmany 8 1 'cd $1 && git fetch --all' $(set +f; echo */*.git)
 }
