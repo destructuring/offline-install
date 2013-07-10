@@ -13,7 +13,7 @@ shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 source "$shome/libexec/_jason"
 
 DEFINE_boolean clean "$FLAGS_FALSE" "delete the cache"
-DEFINE_boolean warm "$FLAGS_TRUE" "warm the cache"
+DEFINE_boolean warm "$FLAGS_FALSE" "warm the cache"
 
 # entry point
 function main {
@@ -55,6 +55,7 @@ function main {
   fi
 
   local tmp_urls="$(mktemp -t XXXXXXXXX)"
+  touch $save_pwd/config/squid-urls.txt
   { cat $save_pwd/config/squid-urls.txt; awk '{print $7}' $shome/var/squid/logs/access.log; } | LANG=C sort -u > $tmp_urls
   mv $tmp_urls $save_pwd/config/squid-urls.txt
 }
