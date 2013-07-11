@@ -30,6 +30,8 @@ function main {
     $cmd_squid -k kill
   fi
 
+  : ${OFFLINE:=$(pwd)}
+
   if [[ "$FLAGS_clean" = "$FLAGS_TRUE" || ! -d $OFFLINE/vault/squid-cache ]]; then
     rm -rf $OFFLINE/vault/squid-cache
     $cmd_squid -z
