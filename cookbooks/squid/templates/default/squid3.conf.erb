@@ -522,7 +522,7 @@
 #	acl aclname srcdom_regex [-i] \.foo\.com ...
 #	  # regex matching client name [slow]
 #	acl aclname dstdom_regex [-i] \.foo\.com ...
-acl rubygems dstdom_regex rubygems
+#acl rubygems dstdom_regex rubygems
 #	  # regex matching server [fast]
 #	  #
 #	  # For dstdomain and dstdom_regex a reverse lookup is tried if a IP
@@ -2241,7 +2241,7 @@ maximum_object_size_in_memory 0 KB
 #
 
 # Uncomment and adjust the following to add a disk cache directory.
-cache_dir ufs <%= @squid %>/var/squid/cache 10000 16 256
+cache_dir ufs <%= @offline %>/vault/squid-cache 10000 16 256
 
 #  TAG: store_dir_select_algorithm
 #	Set this to 'round-robin' as an alternative.
@@ -2945,7 +2945,7 @@ coredump_dir /var/spool/squid3
 #
 #	By default, a URL rewriter is not used.
 #Default:
-url_rewrite_program <%= @squid %>/libexec/rewrite.pl
+#url_rewrite_program <%= @squid %>/libexec/rewrite.pl
 
 #  TAG: url_rewrite_children
 #	The number of redirector processes to spawn. If you start
@@ -2987,7 +2987,7 @@ url_rewrite_program <%= @squid %>/libexec/rewrite.pl
 #	See http://wiki.squid-cache.org/SquidFaq/SquidAcl for details.
 #Default:
 # none
-url_rewrite_access allow rubygems
+#url_rewrite_access allow rubygems
 
 #  TAG: url_rewrite_bypass
 #	When this is 'on', a request will not go through the
@@ -3130,7 +3130,7 @@ refresh_pattern ^gopher:	1440	0%	1440
 refresh_pattern -i (/cgi-bin/|\?) 0	0%	0
 # example lin deb packages
 #refresh_pattern (\.deb|\.udeb)$   129600 100% 129600
-refresh_pattern . 129600 100% 129600 override-expire override-lastmod ignore-reload ignore-no-cache ignore-private ignore-auth ignore-must-revalidate ignore-no-store reload-into-ims
+#refresh_pattern . 129600 100% 129600 override-expire override-lastmod ignore-reload ignore-no-cache ignore-private ignore-auth ignore-must-revalidate ignore-no-store reload-into-ims
 
 #  TAG: quick_abort_min	(KB)
 #Default:
