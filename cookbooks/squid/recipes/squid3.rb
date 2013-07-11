@@ -8,5 +8,5 @@ template "#{node[:release_dir]}/etc/squid.conf" do
   mode 00600
   source "squid3.conf.erb"
   variables(:squid => "#{node[:release_dir]}",
-            :offline => ENV['OFFLINE'] )
+            :offline => ENV['OFFLINE'] || ENV['PWD'] )
 end
