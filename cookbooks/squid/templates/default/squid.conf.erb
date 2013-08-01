@@ -1909,7 +1909,7 @@ hierarchy_stoplist cgi-bin ?
 #	(hard coded at 1 MB).
 #
 #Default:
-cache_dir ufs <%= @offline %>/vault/squid-cache 10000 16 256 
+cache_dir ufs <%= @vault %>/squid-cache 10000 16 256 
 #  TAG: store_dir_select_algorithm
 #	Set this to 'round-robin' as an alternative.
 #
@@ -4846,7 +4846,7 @@ visible_hostname vagrant
 # coredump_dir none
 #
 # Leave coredumps in the first cache dir
-coredump_dir <%= @offline %>/vault/squid-cache
+coredump_dir <%= @vault %>/squid-cache
 
 #  TAG: chroot
 #	Use this to have Squid do a chroot() while initializing.  This
