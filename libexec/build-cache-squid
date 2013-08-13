@@ -35,7 +35,7 @@ function main {
     $cmd_squid -z
   fi
 
-  export http_proxy=htp://localhost:3128
+  export http_proxy=http://localhost:3128
 
   if [[ "$FLAGS_warm" = "$FLAGS_TRUE" ]]; then
     (set +f; rm -f $shome/var/squid/logs/*.log)
