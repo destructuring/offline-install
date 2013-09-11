@@ -11,3 +11,4 @@
 /config/git-cache.txt
 /config/squid-urls.txt
 /etc/squid.conf
+/etc/sshd_config

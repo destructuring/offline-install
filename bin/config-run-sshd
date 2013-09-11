@@ -4,6 +4,5 @@ shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 
 cd $shome
 unset BUNDLE_GEMFILE
-make squid
-squid -z -f $shome/etc/squid.conf
-exec squid -N -f $shome/etc/squid.conf
+make sshd
+exec /usr/sbin/sshd -D -e -f $shome/etc/sshd_config
