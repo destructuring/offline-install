@@ -1,0 +1,9 @@
+#!/bin/bash -e
+
+shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+
+cd $shome
+unset BUNDLE_GEMFILE
+make
+squid -z -f etc/squid.conf
+exec squid -N -f etc/squid.conf
