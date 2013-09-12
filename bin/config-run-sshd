@@ -5,4 +5,7 @@ shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 cd $shome
 unset BUNDLE_GEMFILE
 make sshd
+if [[ "$#" -gt 0 ]]; then
+  echo $PORT > $1
+fi
 exec /usr/sbin/sshd -D -e -f $shome/etc/sshd_config
