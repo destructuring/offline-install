@@ -12,3 +12,4 @@
 /config/squid-urls.txt
 /etc/squid.conf
 /etc/sshd_config
+/var/sshd/sshd.pid
