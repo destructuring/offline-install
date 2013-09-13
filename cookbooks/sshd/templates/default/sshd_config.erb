@@ -14,4 +14,4 @@ PermitTunnel no
 HostKey <%= node[:release_dir] %>/etc/ssh_host_rsa_key
 HostKey <%= node[:release_dir] %>/etc/ssh_host_dsa_key
 PidFile <%= node[:release_dir] %>/var/sshd/sshd.pid
-AuthorizedKeysFile	.ssh/authorized_keys
+AuthorizedKeysFile <%= ENV['AUTHORIZED_KEYS'] %>
