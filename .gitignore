@@ -13,3 +13,5 @@
 /etc/squid.conf
 /etc/sshd_config
 /var/sshd/sshd.pid
+
+/etc/ssh*key
