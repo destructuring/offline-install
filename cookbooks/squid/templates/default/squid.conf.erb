@@ -1131,7 +1131,7 @@ http_access deny all
 
 # Squid normally listens to port 3128
 http_port <%= ENV['PORT'] %>
-http_port <%= ENV['PORT'].to_i + 1 %> ssl-bump cert=<%= @squid %>/etc/squid.pem key=<%= @squid %>/etc/squid.pem
+#http_port <%= ENV['PORT'].to_i + 1 %> ssl-bump cert=<%= @squid %>/etc/squid.pem key=<%= @squid %>/etc/squid.pem
 
 #  TAG: https_port
 # Note: This option is only available if Squid is rebuilt with the
