@@ -16,3 +16,4 @@
 
 /etc/ssh*key
 /etc/ssh*key.pub
+/etc/*.pem
