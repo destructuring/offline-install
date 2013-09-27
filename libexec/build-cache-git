@@ -20,7 +20,7 @@ function main {
   unset GIT_SSH
   cd "$FLAGS_cache"
   runmany 8 1 '[[ -f $1/HEAD ]] || git mirror $1' $(cat "$FLAGS_repos") || true
-  runmany 8 1 'cd $1 && git fetch --all' $(set +f; echo */*.git)
+  runmany 8 1 'echo fetching $1; cd $1 && git fetch --all' $(set +f; echo */*.git)
 }
 
 require sub "$BASH_SOURCE" "$@"
