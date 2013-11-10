@@ -4,7 +4,8 @@ shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 
 cd $shome
 unset BUNDLE_GEMFILE
-make squid
+: ${PORT=5200}
+env PORT=$PORT make squid
 squid -z -f $shome/etc/squid.conf
 if [[ "$#" -gt 0 ]]; then
   echo $PORT > $1
