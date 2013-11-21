@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+unset BUNDLE_GEMFILE
+shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+export VAULT="$shome/vault"
+
+cd "$shome"
+make squid
+squid -z -f etc/squid.conf
+
+exec 2>&1
+exec squid -N -f etc/squid.conf

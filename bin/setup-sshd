@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+unset BUNDLE_GEMFILE
+
+cd "$shome"
+make sshd
+
+for t in rsa dsa; do
+  if [[ ! -f "$shome/etc/ssh_host_${t}_key" ]]; then
+    ssh-keygen -t "${t}" -N '' -f "$shome/etc/ssh_host_${t}_key"
+  fi
+done
+
+exec 2>&1
+exec "$(which sshd)" -De -f etc/sshd_config
