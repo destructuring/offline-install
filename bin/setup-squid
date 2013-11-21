@@ -2,7 +2,10 @@
 
 unset BUNDLE_GEMFILE
 shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
-export VAULT="$shome/vault"
+
+if [[ "$#" != 0 ]]; then
+    echo "$PORT" > "$1"; shift
+  fi
 
 cd "$shome"
 make squid

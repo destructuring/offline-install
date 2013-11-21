@@ -3,6 +3,10 @@
 shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 unset BUNDLE_GEMFILE
 
+if [[ "$#" != 0 ]]; then
+  echo "$PORT" > "$1"; shift
+fi
+
 cd "$shome"
 make sshd
 
