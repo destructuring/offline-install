@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
+
+exec 2>&1
+
+AUTHORIZED_KEYS="$1"; shift
+
+tmp_ssh_key="$(mktemp -t XXXXXX)"
+echo y | ssh-keygen -N '' -t rsa -f "$tmp_ssh_key"
+cat "$tmp_ssh_key.pub" > "$AUTHORIZED_KEYS"
+exec ssh-agent bash -c "ssh-add $tmp_ssh_key; ssh-add -list; exec sleep 8640000"

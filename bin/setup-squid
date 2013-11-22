@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-unset BUNDLE_GEMFILE
 shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 
 if [[ "$#" != 0 ]]; then
@@ -8,6 +7,7 @@ if [[ "$#" != 0 ]]; then
   fi
 
 cd "$shome"
+unset BUNDLE_GEMFILE
 make squid
 squid -z -f etc/squid.conf
 
