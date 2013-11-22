@@ -4,9 +4,10 @@ shome="$(unset CDPATH; cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 
 exec 2>&1
 
+SSH_AGENT_FILE="$1"; shift
 AUTHORIZED_KEYS="$1"; shift
 
 tmp_ssh_key="$(mktemp -t XXXXXX)"
 echo y | ssh-keygen -N '' -t rsa -f "$tmp_ssh_key"
 cat "$tmp_ssh_key.pub" > "$AUTHORIZED_KEYS"
-exec ssh-agent bash -c "ssh-add $tmp_ssh_key; ssh-add -list; exec sleep 8640000"
+exec ssh-agent bash -c "echo '$SSH_AGENT_PID' > '$SSH_AGENT_FILE'; echo '$SSH_AUTH_SOCK' > '$SSH_AGENT_FILE'; ssh-add $tmp_ssh_key; ssh-add -list; exec sleep 8640000"
