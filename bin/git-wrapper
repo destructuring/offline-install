@@ -1,0 +1,4 @@
+#!/usr/bin/env bash -efu
+
+cd $1
+eval exec "$SSH_ORIGINAL_COMMAND"
