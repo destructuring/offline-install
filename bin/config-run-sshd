@@ -6,5 +6,15 @@ cd $shome
 unset BUNDLE_GEMFILE
 export AUTHORIZED_KEYS=$2
 make sshd
-echo $PORT > $1
+
+port_file="$1"; shift
+
+function finish {
+  if [[ -f "$port_file" ]]; then
+    rm -f "$port_file"
+  fi
+} 
+trap finish EXIT
+
+echo $PORT > $port_file
 exec /usr/sbin/sshd -D -e -f $shome/etc/sshd_config

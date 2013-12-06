@@ -6,7 +6,15 @@ cd $shome
 unset BUNDLE_GEMFILE
 make squid
 squid -z -f $shome/etc/squid.conf
-if [[ "$#" -gt 0 ]]; then
-  echo $PORT > $1
-fi
+
+port_file="$1"; shift
+
+function finish {
+  if [[ -f "$port_file" ]]; then
+    rm -f "$port_file"
+  fi
+} 
+trap finish EXIT
+
+echo $PORT > $port_file
 exec squid -N -f $shome/etc/squid.conf

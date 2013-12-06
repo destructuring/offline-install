@@ -10,5 +10,13 @@ AUTHORIZED_KEYS="$1"; shift
 tmp_ssh_key="$(mktemp -t XXXXXX)"
 echo y | ssh-keygen -N '' -t rsa -f "$tmp_ssh_key"
 echo "no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty,command=\"${shome}/bin/git-wrapper ${VAULT}/git-cache\" $(cat $tmp_ssh_key.pub)" > "$AUTHORIZED_KEYS"
+
+function finish {
+  if [[ -f "$SSH_AGENT_FILE" ]]; then
+    rm -f "$SSH_AGENT_FILE"
+  fi
+}
+trap finish EXIT
+
 d='$'
 exec ssh-agent bash -c "echo SSH_AGENT_PID=\"${d}SSH_AGENT_PID\" > '$SSH_AGENT_FILE'; echo SSH_AUTH_SOCK=\"${d}SSH_AUTH_SOCK\" >> '$SSH_AGENT_FILE'; ssh-add $tmp_ssh_key; ssh-add -list; exec sleep 8640000"
