@@ -3131,7 +3131,7 @@ refresh_pattern ^ftp:		1440	20%	10080
 refresh_pattern ^gopher:	1440	0%	1440
 refresh_pattern -i (/cgi-bin/|\?) 0	0%	0
 # example lin deb packages
-#refresh_pattern (\.deb|\.udeb)$   129600 100% 129600
+refresh_pattern (\.deb|\.udeb)$   129600 100% 129600 override-expire override-lastmod ignore-reload ignore-no-cache ignore-private ignore-auth ignore-must-revalidate ignore-no-store reload-into-ims
 #refresh_pattern . 129600 100% 129600 override-expire override-lastmod ignore-reload ignore-no-cache ignore-private ignore-auth ignore-must-revalidate ignore-no-store reload-into-ims
 
 #  TAG: quick_abort_min	(KB)
