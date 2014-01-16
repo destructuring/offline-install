@@ -1,4 +1,10 @@
 #!/usr/bin/env bash -efu
 
 cd $1
+
+repo="$(echo "$SSH_ORIGINAL_COMMAND" | cut -d' ' -f2- | perl -pe 's/(?<!\\)'\''//g' | sed 's#\\'\''#'\''#g; s#^ *##')"
+
+mkdir -p "${repo%%.git}.git"
+ln -nfs "$(basename "$repo" .git).git" "${repo%%.git}"
+
 eval exec "$SSH_ORIGINAL_COMMAND"
