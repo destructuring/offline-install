@@ -19,4 +19,4 @@ function finish {
 trap finish EXIT
 
 d='$'
-exec ssh-agent bash -c "echo SSH_AGENT_PID=\"${d}SSH_AGENT_PID\" > '$SSH_AGENT_FILE'; echo SSH_AUTH_SOCK=\"${d}SSH_AUTH_SOCK\" >> '$SSH_AGENT_FILE'; ssh-add $tmp_ssh_key; ssh-add -list; exec sleep 8640000"
+exec ssh-agent bash -c "echo export SSH_AGENT_PID=\"${d}SSH_AGENT_PID\" > '$SSH_AGENT_FILE'; echo export SSH_AUTH_SOCK=\"${d}SSH_AUTH_SOCK\" >> '$SSH_AGENT_FILE'; ssh-add $tmp_ssh_key; ssh-add -list; exec sleep 8640000"
