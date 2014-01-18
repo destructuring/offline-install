@@ -1,4 +1,6 @@
-#!/usr/bin/env bash -efu
+#!/usr/bin/env bash
+
+set -efu
 
 cd $1
 
