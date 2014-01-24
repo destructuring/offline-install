@@ -9,6 +9,7 @@ AUTHORIZED_KEYS="$1"; shift
 
 tmp_ssh_key="$(mktemp -t XXXXXX)"
 echo y | ssh-keygen -N '' -t rsa -f "$tmp_ssh_key"
+chmod g-w "$AUTHORIZED_KEYS"
 echo "no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty,command=\"${shome}/bin/git-wrapper ${VAULT}/git-cache\" $(cat $tmp_ssh_key.pub)" > "$AUTHORIZED_KEYS"
 
 function finish {
