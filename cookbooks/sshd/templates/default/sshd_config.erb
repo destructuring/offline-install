@@ -9,6 +9,7 @@ GatewayPorts no
 X11Forwarding no
 UsePrivilegeSeparation no
 PermitTunnel no
+MaxAuthTries 16
 
 HostKey <%= node[:release_dir] %>/etc/ssh_host_rsa_key
 HostKey <%= node[:release_dir] %>/etc/ssh_host_dsa_key
