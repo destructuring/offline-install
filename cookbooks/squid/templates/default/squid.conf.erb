@@ -3206,7 +3206,7 @@ refresh_pattern (\.deb|\.udeb)$   129600 100% 129600 override-expire override-la
 #	Minimum value is 1 second, and it is not recommendable to go
 #	much below 10 seconds.
 #Default:
-# negative_dns_ttl 1 minutes
+negative_dns_ttl 1 second
 
 #  TAG: range_offset_limit	(bytes)
 #	Sets a upper limit on how far into the the file a Range request
@@ -5371,7 +5371,7 @@ visible_hostname offline-install
 #	doubled each time all configured DNS servers have been tried.
 #
 #Default:
-# dns_retransmit_interval 5 seconds
+dns_retransmit_interval 1 seconds
 
 #  TAG: dns_timeout
 #	DNS Query timeout. If no response is received to a DNS query
